@@ -12,7 +12,7 @@ B. 使用者上傳檔案帳號（FTP）
 
    1.用useraccount.yml產生新的使用者帳號。  
      
-     使用usetaccount.yml 需要輸入username&password。  
+   使用usetaccount.yml 需要輸入username&password。  
      
    2.重啟服務生效設定。  
 
