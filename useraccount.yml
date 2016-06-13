@@ -1,0 +1,51 @@
+- hosts: c6steve
+  become: true
+  remote_user: root
+
+  vars_prompt:
+  - name: "user_name"
+    prompt: "Please input user name "
+    private: no
+    register: user_name
+
+  - name: "user_pass"
+    prompt: "Please input user password "
+    private: yes
+    encrypt: "sha512_crypt"
+    confirm: yes
+    register: user_pass
+
+  tasks:
+  - name: ==> 0. Create user account
+    user:
+      name: "{{ user_name }}"
+      shell: /sbin/nologin
+      password: "{{ user_pass }}"
+  
+  - name: ==> 1. Copy virtualhost config
+    template:
+      src: ./templates/vhost.conf.j2
+      dest: /etc/httpd/conf.d/{{ user_name }}.conf
+  
+  - name: ==> 2. Set virtualhost "Document"
+    lineinfile:
+      dest: /etc/httpd/conf.d/{{ user_name }}.conf
+      regexp: 'DocumentRoot'
+      line: '        DocumentRoot /home/{{ user_name }}'
+      state: present
+  
+  - name: ==> 3. Set virtualhost "ServerName"
+    lineinfile:
+      dest: /etc/httpd/conf.d/{{ user_name }}.conf
+      regexp: 'ServerName'
+      line: '        ServerName {{ user_name }}.example.com.tw'
+      state: present 
+ 
+  - name: ==> 4. Change virtualhost documentroot permission
+    file: path=/home/{{ user_name }} state=directory mode=0711
+
+  - name: ==> 5. Restart vsftpd service
+    service: name=vsftpd state=restarted
+
+  - name: ==> 6. Reload httpd service
+    service: name=httpd state=reloaded
