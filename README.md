@@ -11,5 +11,15 @@ A. 基礎環境套件安裝
 B. 使用者上傳檔案帳號（FTP）  
 
    1.用useraccount.yml產生新的使用者帳號。  
+     
+     使用usetaccount.yml 需要輸入username&password。  
+     
+   2.重啟服務生效設定。  
+
+C. 上傳映像檔到伺服器，和提供玩家下載硬像檔  
+
+   FTP HOST: username.example.com.tw  
+   上傳一個game.iso到FTP
    
-   2.重啟服務生效設定。
+   下載路徑為： http://username.example.com.tw/game.iso
+   
